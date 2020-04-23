@@ -1,0 +1,22 @@
+- name: front_tls_cert
+  tls_certificate:
+    certificate_chain:
+      filename: /etc/certs/front.pem
+    private_key:
+      filename: /etc/certs/front-key.pem
+- name: serviceA_tls_cert
+  tls_certificate:
+    certificate_chain:
+      filename: /etc/certs/service.pem
+    private_key:
+      filename: /etc/certs/service-key.pem
+- name: serviceB_tls_cert
+  tls_certificate:
+    certificate_chain:
+      filename: /etc/certs/service.pem
+    private_key:
+      filename: /etc/certs/service-key.pem
+- name: validation_context
+  validation_context:
+    trusted_ca:
+      filename: /etc/certs/ca.pem

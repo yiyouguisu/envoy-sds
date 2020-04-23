@@ -1,0 +1,7 @@
+FROM envoyproxy/envoy-alpine:v1.12.0
+
+ADD ./front-envoy.yaml /etc/
+
+ADD ./certs /etc/certs
+
+CMD envoy -l info -c /etc/front-envoy.yaml --service-node front-node --service-cluster front-cluster --drain-time-s 2 --parent-shutdown-time-s 3 

@@ -1,0 +1,10 @@
+FROM frolvlad/alpine-glibc
+
+RUN apk upgrade && apk add curl
+
+ADD ./envoy-pilot /
+RUN chmod u+x /envoy-pilot
+
+ADD ./envoy-pilot.yaml /etc/
+
+CMD /envoy-pilot -c /etc/envoy-pilot.yaml

@@ -1,0 +1,9 @@
+server:
+  host: "0.0.0.0"
+  port: 15010
+config_dump_port: 9091
+metrics_port: 8081
+consul:
+  host: "49.234.118.227"
+log:
+  level: "info"

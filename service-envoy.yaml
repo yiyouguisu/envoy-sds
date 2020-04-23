@@ -1,0 +1,58 @@
+static_resources:
+  secrets:
+    - name: tls_cert
+      tls_certificate:
+        certificate_chain:
+          filename: /etc/certs/service.pem
+        private_key:
+          filename: /etc/certs/service-key.pem
+    - name: validation_context
+      validation_context:
+        trusted_ca:
+          filename: /etc/certs/ca.pem
+  listeners:
+  - address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 443
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        config:
+          codec_type: auto
+          stat_prefix: ingress_http
+          route_config:
+            name: local_route
+            virtual_hosts:
+            - name: service
+              domains:
+              - "*"
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: local_service
+          http_filters:
+          - name: envoy.router
+            config: {}
+      tls_context:
+        common_tls_context:
+          tls_certificate_sds_secret_configs:
+          - name: tls_cert
+          validation_context_sds_secret_config:
+            name: validation_context
+  clusters:
+  - name: local_service
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: round_robin
+    hosts:
+    - socket_address:
+        address: 127.0.0.1
+        port_value: 8080
+admin:
+  access_log_path: "/dev/null"
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 8081
