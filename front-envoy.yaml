@@ -14,24 +14,39 @@ static_resources:
   # - address:
   #     socket_address:
   #       address: 0.0.0.0
-  #       port_value: 80
+  #       port_value: 9999
   #   filter_chains:
   #   - filters:
   #     - name: envoy.http_connection_manager
   #       config:
   #         codec_type: auto
   #         stat_prefix: ingress_http
-  #         route_config:
-  #           virtual_hosts:
-  #           - name: backend
-  #             domains:
-  #             - "example.com"
-  #             routes:
-  #             - match:
-  #                 prefix: "/"
-  #               redirect:
-  #                 path_redirect: "/"
-  #                 https_redirect: true
+  #         scoped_routes:
+  #           name: foo-scoped-routes
+  #           scope_key_builder:
+  #             fragments:
+  #               - header_value_extractor:
+  #                   name: "X-APP"
+  #                   element_separator: ","
+  #                   element:
+  #                     separator: "="
+  #                     key: vip
+  #           rds_config_source:
+  #             ads: {}
+  #           # scoped_rds:
+  #           #   scoped_rds_config_source: {ads: {}}
+  #           scoped_route_configurations_list:
+  #             scoped_route_configurations:
+  #             - name: route-scope1
+  #               route_configuration_name: route-config1
+  #               key:
+  #                   fragments:
+  #                     - string_key: 172.10.10.20
+  #             - name: route-scope2
+  #               route_configuration_name: route-config2
+  #               key:
+  #                   fragments:
+  #                     - string_key: 172.10.10.30
   #         http_filters:
   #         - name: envoy.router
   #           config: {}

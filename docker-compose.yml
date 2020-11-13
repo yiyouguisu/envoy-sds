@@ -41,6 +41,20 @@ services:
     expose:
       - "80"
   
+  servicec:
+    build:
+      context: ./
+      dockerfile: Dockerfile-service
+    networks:
+      envoy-sds-network:
+        ipv4_address: 172.28.0.6
+        aliases:
+          - serviceC
+    environment:
+      - SERVICE_NAME=3
+    expose:
+      - "80"
+  
   front-envoy:
     build:
       context: ./
@@ -51,10 +65,14 @@ services:
     expose:
       - "80"
       - "443"
+      - "9999"
+      - "1234"
       - "9901"
     ports:
       - "8088:80"
       - "8443:443"
+      - "9999:9999"
+      - "1234:1234"
       - "9901:9901"
 
 networks:
